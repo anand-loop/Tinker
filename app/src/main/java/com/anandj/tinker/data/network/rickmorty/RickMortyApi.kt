@@ -1,6 +1,7 @@
 package com.anandj.tinker.data.network.rickmorty
 
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface RickMortyApi {
@@ -8,4 +9,9 @@ interface RickMortyApi {
     suspend fun getCharacters(
         @Query("page") page: Int? = null,
     ): PagedList<Character>
+
+    @GET("character/{id}")
+    suspend fun getCharacter(
+        @Path("id") id: String,
+    ): Character
 }

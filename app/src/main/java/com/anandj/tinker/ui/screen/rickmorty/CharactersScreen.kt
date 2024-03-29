@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.anandj.tinker.R
@@ -32,7 +33,10 @@ import com.anandj.tinker.ui.core.PagingHandler
 import com.anandj.tinker.ui.theme.TinkerTheme
 
 @Composable
-fun CharactersScreen(modifier: Modifier = Modifier) {
+fun CharactersScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+) {
     val vm: CharactersViewModel = hiltViewModel()
     val state = vm.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -50,8 +54,8 @@ fun CharactersScreen(modifier: Modifier = Modifier) {
         onLoadNextPage = {
             vm.sendAction(CharactersAction.LoadNextPage)
         },
-        onCharacterClick = {
-            vm.sendAction(CharactersAction.EditCharacter(it))
+        onCharacterClick = { id ->
+            navController.navigate("character/$id")
         },
     )
 }
@@ -71,7 +75,7 @@ private fun CharacterList(
     state: CharactersState,
     modifier: Modifier = Modifier,
     onLoadNextPage: () -> Unit,
-    onCharacterClick: (Int) -> Unit,
+    onCharacterClick: (characterId: Int) -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
 
@@ -87,7 +91,7 @@ private fun CharacterList(
                     Modifier
                         .fillMaxWidth()
                         .clickable {
-                            onCharacterClick(index)
+                            onCharacterClick(item.id)
                         },
             )
         }
