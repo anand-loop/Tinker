@@ -18,6 +18,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.anandj.tinker.R
 import com.anandj.tinker.data.network.rickmorty.Character
+import com.anandj.tinker.util.GrayscaleTransformation
 
 @Composable
 fun CharacterDetailsScreen(
@@ -52,6 +53,13 @@ private fun CharacterDetails(
                 ImageRequest.Builder(LocalContext.current)
                     .data(character.image)
                     .crossfade(true)
+                    .transformations(
+                        if (character.isDead()) {
+                            listOf(GrayscaleTransformation())
+                        } else {
+                            emptyList()
+                        },
+                    )
                     .build(),
             placeholder = painterResource(R.drawable.placeholder_image),
             contentDescription = null,
@@ -62,6 +70,10 @@ private fun CharacterDetails(
             fontWeight = FontWeight.Medium,
         )
     }
+}
+
+private fun Character.isDead(): Boolean {
+    return this.status == "Dead"
 }
 
 private fun handleEffect(

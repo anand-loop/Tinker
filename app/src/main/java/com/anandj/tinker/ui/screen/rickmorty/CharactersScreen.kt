@@ -145,7 +145,7 @@ fun CharacterCard(
                 model =
                     ImageRequest.Builder(LocalContext.current)
                         .data(character.image)
-                        .crossfade(true)
+                        .crossfade(400)
                         .build(),
                 placeholder = painterResource(R.drawable.placeholder_image),
                 contentDescription = null,

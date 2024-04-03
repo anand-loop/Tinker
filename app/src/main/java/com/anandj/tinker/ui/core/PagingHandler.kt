@@ -1,6 +1,5 @@
 package com.anandj.tinker.ui.core
 
-import android.util.Log
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,8 +29,9 @@ fun PagingHandler(
         snapshotFlow { shouldLoadNextPage.value }
             .distinctUntilChanged()
             .collect {
-                Log.d("anandjdev", "LaunchedEffect: shouldLoadNextPage=$it")
-                onLoadNextPage()
+                if (it) {
+                    onLoadNextPage()
+                }
             }
     }
 }
