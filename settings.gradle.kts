@@ -21,4 +21,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Tinker"
 include(":app")
- 

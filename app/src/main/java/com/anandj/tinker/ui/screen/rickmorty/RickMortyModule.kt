@@ -12,7 +12,7 @@ fun RickMortyModule() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "characters") {
-        composable("characters") {
+        composable(route = "characters") {
             CharactersScreen(navController = navController)
         }
         composable(
@@ -20,6 +20,7 @@ fun RickMortyModule() {
             arguments = listOf(navArgument("id") { type = NavType.StringType }),
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id") ?: "0"
+
             CharacterDetailsScreen(id = id)
         }
     }
