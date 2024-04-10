@@ -3,15 +3,21 @@ package com.anandj.tinker.ui.screen.rickmorty
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
@@ -46,9 +52,13 @@ private fun CharacterDetails(
     modifier: Modifier,
     character: Character,
 ) {
+    val lazyListState = rememberLazyListState()
+
     Column(modifier = modifier) {
         AsyncImage(
-            modifier = Modifier.fillMaxWidth(),
+            modifier =
+                Modifier.fillMaxWidth()
+                    .fillMaxHeight(.40f),
             model =
                 ImageRequest.Builder(LocalContext.current)
                     .data(character.image)
@@ -62,13 +72,60 @@ private fun CharacterDetails(
                     )
                     .build(),
             placeholder = painterResource(R.drawable.placeholder_image),
+            contentScale = ContentScale.FillWidth,
             contentDescription = null,
         )
-        Text(
-            text = character.name,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Medium,
-        )
+
+        LazyColumn(state = lazyListState) {
+            item {
+                Text(
+                    modifier = Modifier.padding(16.dp),
+                    text = character.name,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Medium,
+                )
+            }
+            item {
+                Text(
+                    modifier = Modifier.padding(16.dp),
+                    text = character.species,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Medium,
+                )
+            }
+            item {
+                Text(
+                    modifier = Modifier.padding(16.dp),
+                    text = character.status,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Medium,
+                )
+            }
+            item {
+                Text(
+                    modifier = Modifier.padding(16.dp),
+                    text = character.gender,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Medium,
+                )
+            }
+            item {
+                Text(
+                    modifier = Modifier.padding(16.dp),
+                    text = character.location.name,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Medium,
+                )
+            }
+            item {
+                Text(
+                    modifier = Modifier.padding(16.dp),
+                    text = character.origin.name,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Medium,
+                )
+            }
+        }
     }
 }
 

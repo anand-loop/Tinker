@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 @Composable
 fun PagingHandler(
     lazyListState: LazyListState,
-    pagingThreshold: Int = 5,
+    pagingThreshold: Int = 10,
     onLoadNextPage: () -> Unit,
 ) {
     val shouldLoadNextPage =

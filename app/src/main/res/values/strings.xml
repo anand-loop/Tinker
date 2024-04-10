@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Tinker</string>
+
+    <string name="character_traits" comment = "1 = Species, 2 = Gender">%1$s \u00B7 %2$s</string>
 </resources>
