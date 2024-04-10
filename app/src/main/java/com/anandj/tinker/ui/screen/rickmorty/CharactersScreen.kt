@@ -27,7 +27,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.anandj.tinker.R
@@ -39,7 +38,7 @@ import com.anandj.tinker.ui.theme.TinkerTheme
 @Composable
 fun CharactersScreen(
     modifier: Modifier = Modifier,
-    navController: NavController,
+    onRouteToDetails: (id: Int) -> Unit,
 ) {
     val vm: CharactersViewModel = hiltViewModel()
     val state = vm.state.collectAsStateWithLifecycle()
@@ -59,7 +58,7 @@ fun CharactersScreen(
             vm.sendAction(CharactersAction.LoadNextPage)
         },
         onCharacterClick = { id ->
-            navController.navigate("character/$id")
+            onRouteToDetails(id)
         },
     )
 }
