@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,17 +51,19 @@ fun CharactersScreen(
         }
     }
 
-    CharacterList(
-        characters = vm.characters,
-        state = state.value,
-        modifier = modifier,
-        onLoadNextPage = {
-            vm.sendAction(CharactersAction.LoadNextPage)
-        },
-        onCharacterClick = { id ->
-            onRouteToDetails(id)
-        },
-    )
+    Surface(modifier = modifier) {
+        CharacterList(
+            characters = vm.characters,
+            state = state.value,
+            modifier = modifier,
+            onLoadNextPage = {
+                vm.sendAction(CharactersAction.LoadNextPage)
+            },
+            onCharacterClick = { id ->
+                onRouteToDetails(id)
+            },
+        )
+    }
 }
 
 private fun handleEffect(
@@ -74,9 +77,9 @@ private fun handleEffect(
 
 @Composable
 private fun CharacterList(
+    modifier: Modifier = Modifier,
     characters: List<Character>,
     state: CharactersState,
-    modifier: Modifier = Modifier,
     onLoadNextPage: () -> Unit,
     onCharacterClick: (characterId: Int) -> Unit,
 ) {

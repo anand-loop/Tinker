@@ -1,72 +1,81 @@
 package com.anandj.tinker.ui.screen.rickmorty
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
-import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.anandj.tinker.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RickMortyModule() {
     val navController = rememberNavController()
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
-    Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            TopAppBar(
-                scrollBehavior = scrollBehavior,
-                colors =
-                    topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        titleContentColor = MaterialTheme.colorScheme.primary,
-                    ),
-                title = {
-                    Row(verticalAlignment = Alignment.Top) {
-                        Text(
-                            stringResource(id = R.string.rick_morty_app_title),
-                            style = MaterialTheme.typography.titleSmall,
-                        )
-                    }
-                },
-            )
-        },
-    ) { paddingValues ->
-        NavHost(navController = navController, startDestination = "characters") {
-            composable(route = "characters") {
+    Surface {
+        NavHost(
+            navController = navController,
+            startDestination = "characters",
+        ) {
+            composable(
+                route = "characters",
+                exitTransition = { fadeOut(tween(DURATION)) },
+                popEnterTransition = { fadeIn(tween(DURATION)) },
+            ) {
                 CharactersScreen(
-                    modifier = Modifier.padding(paddingValues = paddingValues),
+                    modifier =
+                        Modifier
+                            .fillMaxSize(),
                     onRouteToDetails = { navController.navigate("character/$it") },
                 )
+                // TestBox(Color.Red, { navController.navigate("character/1") })
             }
             composable(
-                "character/{id}",
+                route = "character/{id}",
                 arguments = listOf(navArgument("id") { type = NavType.StringType }),
+                enterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Start,
+                        tween(DURATION),
+                    )
+                },
+                popExitTransition = {
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.End,
+                        tween(DURATION),
+                    )
+                },
             ) { backStackEntry ->
                 val id = backStackEntry.arguments?.getString("id") ?: "0"
 
                 CharacterDetailsScreen(
-                    modifier = Modifier.padding(paddingValues = paddingValues),
+                    modifier = Modifier.fillMaxSize(),
                     id = id,
                 )
+
+                // TestBox(Color.Blue, {})
             }
         }
     }
 }
+
+@Composable
+private fun TestBox(
+    color: Color,
+    onClick: () -> Unit,
+) {
+    Box(modifier = Modifier.fillMaxSize().background(color).clickable { onClick() }) {
+    }
+}
+
+private const val DURATION = 300

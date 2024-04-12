@@ -4,11 +4,13 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,22 +44,25 @@ fun CharacterDetailsScreen(
         }
     }
 
-    state.value.character?.let {
-        CharacterDetails(modifier = modifier, it)
+    Surface(modifier = modifier) {
+        state.value.character?.let {
+            CharacterDetails(character = it)
+        }
     }
 }
 
 @Composable
 private fun CharacterDetails(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     character: Character,
 ) {
     val lazyListState = rememberLazyListState()
 
-    Column(modifier = modifier) {
+    Column(modifier = modifier.fillMaxSize()) {
         AsyncImage(
             modifier =
-                Modifier.fillMaxWidth()
+                Modifier
+                    .fillMaxWidth()
                     .fillMaxHeight(.40f),
             model =
                 ImageRequest.Builder(LocalContext.current)

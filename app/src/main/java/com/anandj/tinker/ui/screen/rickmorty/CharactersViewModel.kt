@@ -11,7 +11,6 @@ import com.anandj.tinker.ui.core.UiAction
 import com.anandj.tinker.ui.core.UiEffect
 import com.anandj.tinker.ui.core.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,13 +24,13 @@ class CharactersViewModel
         val characters: List<Character> = _characters
 
         init {
-            onLoad()
+            onLoad(nextPage = false)
         }
 
         override suspend fun onAction(action: CharactersAction) {
             when (action) {
-                CharactersAction.Load -> onLoad()
-                CharactersAction.LoadNextPage -> onLoadNextPage()
+                CharactersAction.Load -> onLoad(nextPage = false)
+                CharactersAction.LoadNextPage -> onLoad(nextPage = true)
                 is CharactersAction.EditCharacter -> onEditCharacter(action.index)
             }
         }
@@ -40,52 +39,39 @@ class CharactersViewModel
             _characters[index] = _characters[index].copy(name = "<deleted>")
         }
 
-        private fun onLoad() {
-            viewModelScope.launch(Dispatchers.IO) {
-                updateState { copy(fetchState = FetchState.REFRESHING) }
-
-                runCatching { rickMortyApi.getCharacters() }
-                    .onSuccess {
-                        val nextPage = it.info.next.getPageNum()
-                        _characters.clear()
-                        _characters.addAll(it.results)
-                        updateState {
-                            copy(
-                                totalCount = it.info.count,
-                                nextPage = nextPage,
-                                fetchState = FetchState.IDLE,
-                            )
-                        }
-                    }
-                    .onFailure {
-                        CharactersEffect.ShowMessage("Error: ${it.message}")
-                    }
-            }
-        }
-
-        private fun onLoadNextPage() {
+        private fun onLoad(nextPage: Boolean) {
             if (state.value.fetchState != FetchState.IDLE) return
 
-            viewModelScope.launch(Dispatchers.IO) {
-                updateState { copy(fetchState = FetchState.PAGING) }
-
-                runCatching {
-                    // delay(2000)
-                    rickMortyApi.getCharacters(page = state.value.nextPage)
+            viewModelScope.launch {
+                if (nextPage) {
+                    updateState { copy(fetchState = FetchState.PAGING) }
+                } else {
+                    updateState { copy(fetchState = FetchState.REFRESHING, nextPage = null) }
                 }
+
+                runCatching { rickMortyApi.getCharacters(page = state.value.nextPage) }
                     .onSuccess {
-                        val nextPage = it.info.next.getPageNum()
+                        if (!nextPage) {
+                            _characters.clear()
+                        }
                         _characters.addAll(it.results)
+
                         updateState {
                             copy(
                                 totalCount = it.info.count,
-                                nextPage = nextPage,
+                                nextPage = it.info.next.getPageNum(),
                                 fetchState = FetchState.IDLE,
                             )
                         }
                     }
                     .onFailure {
                         CharactersEffect.ShowMessage("Error: ${it.message}")
+
+                        if (nextPage) {
+                            updateState { copy(fetchState = FetchState.PAGING_ERROR) }
+                        } else {
+                            updateState { copy(fetchState = FetchState.REFRESHING_ERROR) }
+                        }
                     }
             }
         }

@@ -4,4 +4,6 @@ enum class FetchState {
     IDLE,
     REFRESHING,
     PAGING,
+    REFRESHING_ERROR,
+    PAGING_ERROR,
 }

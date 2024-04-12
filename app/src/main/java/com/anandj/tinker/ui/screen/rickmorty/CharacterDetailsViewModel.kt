@@ -8,7 +8,6 @@ import com.anandj.tinker.ui.core.UiAction
 import com.anandj.tinker.ui.core.UiEffect
 import com.anandj.tinker.ui.core.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,7 +24,7 @@ class CharacterDetailsViewModel
         }
 
         private fun onLoad(id: String) {
-            viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch {
                 updateState { copy(isLoading = true) }
 
                 runCatching { rickMortyApi.getCharacter(id) }
