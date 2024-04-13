@@ -1,4 +1,4 @@
-package com.anandj.tinker.ui.theme
+package com.anandj.tinker.theme
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf

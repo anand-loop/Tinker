@@ -1,10 +1,9 @@
-package com.anandj.tinker.ui
+package com.anandj.tinker
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.anandj.tinker.ui.screen.main.MainScreen
-import com.anandj.tinker.ui.theme.TinkerTheme
+import com.anandj.tinker.theme.TinkerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

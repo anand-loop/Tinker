@@ -1,4 +1,4 @@
-package com.anandj.tinker.ui.theme
+package com.anandj.tinker.theme
 
 import android.app.Activity
 import android.os.Build

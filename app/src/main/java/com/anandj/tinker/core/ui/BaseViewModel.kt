@@ -1,4 +1,4 @@
-package com.anandj.tinker.ui.core
+package com.anandj.tinker.core.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

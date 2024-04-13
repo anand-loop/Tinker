@@ -1,4 +1,4 @@
-package com.anandj.tinker.ui.screen.main
+package com.anandj.tinker
 
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalDrawerSheet
@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.anandj.tinker.ui.screen.rickmorty.RickMortyModule
+import com.anandj.tinker.module.rickmorty.ui.RickMortyModule
 import kotlinx.coroutines.launch
 
 @Composable

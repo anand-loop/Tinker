@@ -1,4 +1,4 @@
-package com.anandj.tinker.ui.core
+package com.anandj.tinker.core.ui
 
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable

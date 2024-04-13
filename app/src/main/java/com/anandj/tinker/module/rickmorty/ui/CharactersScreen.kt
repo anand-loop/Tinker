@@ -1,4 +1,4 @@
-package com.anandj.tinker.ui.screen.rickmorty
+package com.anandj.tinker.module.rickmorty.ui
 
 import android.content.Context
 import android.widget.Toast
@@ -31,10 +31,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.anandj.tinker.R
-import com.anandj.tinker.data.network.rickmorty.Character
-import com.anandj.tinker.ui.core.FetchState
-import com.anandj.tinker.ui.core.PagingHandler
-import com.anandj.tinker.ui.theme.TinkerTheme
+import com.anandj.tinker.core.ui.FetchState
+import com.anandj.tinker.core.ui.PagingHandler
+import com.anandj.tinker.module.rickmorty.data.remote.Character
+import com.anandj.tinker.theme.TinkerTheme
 
 @Composable
 fun CharactersScreen(

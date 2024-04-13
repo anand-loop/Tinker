@@ -1,4 +1,4 @@
-package com.anandj.tinker.data.network.rickmorty
+package com.anandj.tinker.module.rickmorty.data.remote
 
 data class PagedList<T>(
     val info: Info,

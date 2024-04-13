@@ -1,4 +1,4 @@
-package com.anandj.tinker.ui.screen.rickmorty
+package com.anandj.tinker.module.rickmorty.ui
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
@@ -26,35 +26,33 @@ fun RickMortyModule() {
         NavHost(
             navController = navController,
             startDestination = "characters",
+            exitTransition = { fadeOut(tween(DURATION)) },
+            popEnterTransition = { fadeIn(tween(DURATION)) },
+            enterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start,
+                    tween(DURATION),
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End,
+                    tween(DURATION),
+                )
+            },
         ) {
             composable(
                 route = "characters",
-                exitTransition = { fadeOut(tween(DURATION)) },
-                popEnterTransition = { fadeIn(tween(DURATION)) },
             ) {
                 CharactersScreen(
                     modifier =
-                        Modifier
-                            .fillMaxSize(),
+                        Modifier.fillMaxSize(),
                     onRouteToDetails = { navController.navigate("character/$it") },
                 )
-                // TestBox(Color.Red, { navController.navigate("character/1") })
             }
             composable(
                 route = "character/{id}",
                 arguments = listOf(navArgument("id") { type = NavType.StringType }),
-                enterTransition = {
-                    slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Start,
-                        tween(DURATION),
-                    )
-                },
-                popExitTransition = {
-                    slideOutOfContainer(
-                        AnimatedContentTransitionScope.SlideDirection.End,
-                        tween(DURATION),
-                    )
-                },
             ) { backStackEntry ->
                 val id = backStackEntry.arguments?.getString("id") ?: "0"
 
@@ -63,8 +61,6 @@ fun RickMortyModule() {
                     id = id,
                     onBack = { navController.popBackStack() },
                 )
-
-                // TestBox(Color.Blue, {})
             }
         }
     }

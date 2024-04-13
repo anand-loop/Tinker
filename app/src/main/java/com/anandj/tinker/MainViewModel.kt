@@ -1,9 +1,9 @@
-package com.anandj.tinker.ui.screen.main
+package com.anandj.tinker
 
-import com.anandj.tinker.ui.core.BaseViewModel
-import com.anandj.tinker.ui.core.UiAction
-import com.anandj.tinker.ui.core.UiEffect
-import com.anandj.tinker.ui.core.UiState
+import com.anandj.tinker.core.ui.BaseViewModel
+import com.anandj.tinker.core.ui.UiAction
+import com.anandj.tinker.core.ui.UiEffect
+import com.anandj.tinker.core.ui.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

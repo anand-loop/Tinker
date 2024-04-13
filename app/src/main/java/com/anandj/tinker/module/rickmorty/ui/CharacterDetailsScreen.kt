@@ -1,4 +1,4 @@
-package com.anandj.tinker.ui.screen.rickmorty
+package com.anandj.tinker.module.rickmorty.ui
 
 import android.content.Context
 import android.widget.Toast
@@ -35,8 +35,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.anandj.tinker.R
-import com.anandj.tinker.data.network.rickmorty.Character
-import com.anandj.tinker.util.GrayscaleTransformation
+import com.anandj.tinker.core.draw.GrayscaleTransformation
+import com.anandj.tinker.module.rickmorty.data.remote.Character
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,7 +59,9 @@ fun CharacterDetailsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { },
+                title = {
+                    Text(text = state.value.character?.name ?: "")
+                },
                 navigationIcon = {
                     IconButton(onClick = { onBack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
@@ -118,14 +120,6 @@ private fun CharacterDetails(
         )
 
         LazyColumn(state = lazyListState) {
-            item {
-                Text(
-                    modifier = Modifier.padding(16.dp),
-                    text = character.name,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Medium,
-                )
-            }
             item {
                 Text(
                     modifier = Modifier.padding(16.dp),

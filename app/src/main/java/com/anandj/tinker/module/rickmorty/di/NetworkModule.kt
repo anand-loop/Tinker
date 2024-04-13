@@ -1,6 +1,6 @@
-package com.anandj.tinker.data.di
+package com.anandj.tinker.module.rickmorty.di
 
-import com.anandj.tinker.data.network.rickmorty.RickMortyApi
+import com.anandj.tinker.module.rickmorty.data.remote.RickMortyApi
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides

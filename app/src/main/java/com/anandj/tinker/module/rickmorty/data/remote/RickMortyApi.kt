@@ -1,4 +1,4 @@
-package com.anandj.tinker.data.network.rickmorty
+package com.anandj.tinker.module.rickmorty.data.remote
 
 import retrofit2.http.GET
 import retrofit2.http.Path
