@@ -5,8 +5,8 @@ import com.anandj.tinker.core.ui.BaseViewModel
 import com.anandj.tinker.core.ui.UiAction
 import com.anandj.tinker.core.ui.UiEffect
 import com.anandj.tinker.core.ui.UiState
+import com.anandj.tinker.module.rickmorty.data.RickMortyRepository
 import com.anandj.tinker.module.rickmorty.data.remote.Character
-import com.anandj.tinker.module.rickmorty.data.remote.RickMortyApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,7 +15,7 @@ import javax.inject.Inject
 class CharacterDetailsViewModel
     @Inject
     constructor(
-        private val rickMortyApi: RickMortyApi,
+        private val repository: RickMortyRepository,
     ) : BaseViewModel<CharacterDetailsState, CharacterDetailsAction, CharacterDetailsEffect>(CharacterDetailsState()) {
         override suspend fun onAction(action: CharacterDetailsAction) {
             when (action) {
@@ -23,11 +23,11 @@ class CharacterDetailsViewModel
             }
         }
 
-        private fun onLoad(id: String) {
+        private fun onLoad(id: Int) {
             viewModelScope.launch {
                 updateState { copy(isLoading = true) }
 
-                runCatching { rickMortyApi.getCharacter(id) }
+                runCatching { repository.getCharacter(id) }
                     .onSuccess {
                         updateState { copy(character = it, isLoading = false) }
                     }
@@ -44,7 +44,7 @@ data class CharacterDetailsState(
 ) : UiState
 
 sealed class CharacterDetailsAction : UiAction {
-    data class Load(val id: String) : CharacterDetailsAction()
+    data class Load(val id: Int) : CharacterDetailsAction()
 }
 
 sealed class CharacterDetailsEffect : UiEffect {

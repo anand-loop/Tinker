@@ -12,6 +12,6 @@ interface RickMortyApi {
 
     @GET("character/{id}")
     suspend fun getCharacter(
-        @Path("id") id: String,
+        @Path("id") id: Int,
     ): Character
 }

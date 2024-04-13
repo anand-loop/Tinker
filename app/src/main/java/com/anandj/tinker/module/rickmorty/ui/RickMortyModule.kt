@@ -52,9 +52,9 @@ fun RickMortyModule() {
             }
             composable(
                 route = "character/{id}",
-                arguments = listOf(navArgument("id") { type = NavType.StringType }),
+                arguments = listOf(navArgument("id") { type = NavType.IntType }),
             ) { backStackEntry ->
-                val id = backStackEntry.arguments?.getString("id") ?: "0"
+                val id = backStackEntry.arguments?.getInt("id") ?: 0
 
                 CharacterDetailsScreen(
                     modifier = Modifier.fillMaxSize(),

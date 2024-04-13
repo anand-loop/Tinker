@@ -8,8 +8,8 @@ import com.anandj.tinker.core.ui.FetchState
 import com.anandj.tinker.core.ui.UiAction
 import com.anandj.tinker.core.ui.UiEffect
 import com.anandj.tinker.core.ui.UiState
+import com.anandj.tinker.module.rickmorty.data.RickMortyRepository
 import com.anandj.tinker.module.rickmorty.data.remote.Character
-import com.anandj.tinker.module.rickmorty.data.remote.RickMortyApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,7 +18,7 @@ import javax.inject.Inject
 class CharactersViewModel
     @Inject
     constructor(
-        private val rickMortyApi: RickMortyApi,
+        private val repository: RickMortyRepository,
     ) : BaseViewModel<CharactersState, CharactersAction, CharactersEffect>(CharactersState()) {
         private val _characters = mutableStateListOf<Character>()
         val characters: List<Character> = _characters
@@ -49,7 +49,7 @@ class CharactersViewModel
                     updateState { copy(fetchState = FetchState.REFRESHING, nextPage = null) }
                 }
 
-                runCatching { rickMortyApi.getCharacters(page = state.value.nextPage) }
+                runCatching { repository.getCharacters(page = state.value.nextPage) }
                     .onSuccess {
                         if (!nextPage) {
                             _characters.clear()

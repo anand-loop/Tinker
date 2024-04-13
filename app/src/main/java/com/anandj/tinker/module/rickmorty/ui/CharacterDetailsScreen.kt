@@ -42,7 +42,7 @@ import com.anandj.tinker.module.rickmorty.data.remote.Character
 @Composable
 fun CharacterDetailsScreen(
     modifier: Modifier = Modifier,
-    id: String,
+    id: Int,
     onBack: () -> Unit = {},
 ) {
     val vm: CharacterDetailsViewModel = hiltViewModel()
