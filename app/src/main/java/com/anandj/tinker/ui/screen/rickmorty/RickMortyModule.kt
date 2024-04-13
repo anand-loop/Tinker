@@ -61,6 +61,7 @@ fun RickMortyModule() {
                 CharacterDetailsScreen(
                     modifier = Modifier.fillMaxSize(),
                     id = id,
+                    onBack = { navController.popBackStack() },
                 )
 
                 // TestBox(Color.Blue, {})

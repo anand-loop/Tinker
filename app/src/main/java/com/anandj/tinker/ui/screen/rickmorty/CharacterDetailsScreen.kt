@@ -2,18 +2,28 @@ package com.anandj.tinker.ui.screen.rickmorty
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -28,10 +38,12 @@ import com.anandj.tinker.R
 import com.anandj.tinker.data.network.rickmorty.Character
 import com.anandj.tinker.util.GrayscaleTransformation
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CharacterDetailsScreen(
     modifier: Modifier = Modifier,
     id: String,
+    onBack: () -> Unit = {},
 ) {
     val vm: CharacterDetailsViewModel = hiltViewModel()
     val state = vm.state.collectAsStateWithLifecycle()
@@ -44,9 +56,33 @@ fun CharacterDetailsScreen(
         }
     }
 
-    Surface(modifier = modifier) {
-        state.value.character?.let {
-            CharacterDetails(character = it)
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { },
+                navigationIcon = {
+                    IconButton(onClick = { onBack() }) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                    }
+                },
+            )
+        },
+    ) { padding ->
+        Box(
+            modifier = modifier.padding(padding),
+            contentAlignment = Alignment.Center,
+        ) {
+            if (state.value.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.width(64.dp),
+                    color = MaterialTheme.colorScheme.secondary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                )
+            } else {
+                state.value.character?.let {
+                    CharacterDetails(character = it)
+                }
+            }
         }
     }
 }
