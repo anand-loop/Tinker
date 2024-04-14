@@ -62,6 +62,7 @@ fun CharacterDetailsScreen(
                 title = {
                     Text(text = state.value.character?.name ?: "")
                 },
+                // colors = TopAppBarDefaults.topAppBarColors(containerColor = Transparent),
                 navigationIcon = {
                     IconButton(onClick = { onBack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
@@ -71,7 +72,7 @@ fun CharacterDetailsScreen(
         },
     ) { padding ->
         Box(
-            modifier = modifier.padding(padding),
+            modifier = modifier,
             contentAlignment = Alignment.Center,
         ) {
             if (state.value.isLoading) {
