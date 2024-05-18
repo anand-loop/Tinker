@@ -1,7 +1,8 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.anandj.tinker.module.rickmorty.ui
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,8 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -27,15 +26,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -64,11 +66,13 @@ fun CharactersScreen(
         }
     }
 
+    val pullRefreshState = rememberPullToRefreshState()
     Surface(modifier = modifier) {
         CharacterList(
             characters = vm.characters,
             state = state.value,
-            modifier = modifier,
+            pullRefreshState = pullRefreshState,
+            modifier = Modifier,
             onRefresh = {
                 vm.sendAction(CharactersAction.Load)
             },
@@ -91,47 +95,68 @@ private fun handleEffect(
     }
 }
 
+@Composable
+fun RefreshBar(
+    fetchState: FetchState,
+    pullRefreshState: PullToRefreshState,
+    onRefresh: () -> Unit,
+) {
+    LaunchedEffect(key1 = pullRefreshState.isRefreshing) {
+        if (pullRefreshState.isRefreshing) {
+            pullRefreshState.startRefresh()
+            onRefresh()
+        }
+    }
+
+    LaunchedEffect(key1 = fetchState) {
+        if (pullRefreshState.isRefreshing && fetchState != FetchState.REFRESHING) {
+            pullRefreshState.endRefresh()
+        }
+    }
+
+    Box(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        if (fetchState == FetchState.IDLE) {
+            IconButton(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(32.dp * (1f + pullRefreshState.progress)),
+                onClick = { },
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_people),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
+        } else {
+            CircularProgressIndicator(
+                modifier =
+                    Modifier
+                        .size(32.dp),
+            )
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CharacterList(
     modifier: Modifier = Modifier,
     characters: List<Character>,
     state: CharactersState,
+    pullRefreshState: PullToRefreshState,
     onRefresh: () -> Unit,
     onLoadNextPage: () -> Unit,
     onCharacterClick: (characterId: Int) -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
-    val pullRefreshState =
-        rememberPullToRefreshState()
-
-    with(pullRefreshState) {
-        Log.d(
-            "anandjdev",
-            "pullRefreshState: positionalThreshold=$positionalThreshold progress=$progress isRefreshing=$isRefreshing",
-        )
-    }
-
-    LaunchedEffect(key1 = pullRefreshState.isRefreshing) {
-        if (pullRefreshState.isRefreshing) {
-            Log.d(
-                "anandjdev",
-                "   startRefresh()",
-            )
-            pullRefreshState.startRefresh()
-            onRefresh()
-        }
-    }
-
-    LaunchedEffect(key1 = state.fetchState) {
-        if (pullRefreshState.isRefreshing && state.fetchState != FetchState.REFRESHING) {
-            Log.d(
-                "anandjdev",
-                "   endRefresh()",
-            )
-            pullRefreshState.endRefresh()
-        }
-    }
 
     Box(Modifier.nestedScroll(pullRefreshState.nestedScrollConnection)) {
         LazyColumn(
@@ -140,31 +165,12 @@ private fun CharacterList(
             verticalArrangement = Arrangement.spacedBy(TinkerTheme.dimen.contentPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if (state.fetchState == FetchState.IDLE) {
-                item {
-                    IconButton(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .height(32.dp * (1f + pullRefreshState.progress)),
-                        onClick = { },
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize(),
-                        )
-                    }
-                }
-            } else {
-                item {
-                    CircularProgressIndicator(
-                        modifier =
-                            Modifier
-                                .size(32.dp),
-                    )
+            item {
+                RefreshBar(state.fetchState, pullRefreshState) {
+                    onRefresh()
                 }
             }
+
             itemsIndexed(characters) { index, item ->
                 CharacterCard(
                     item,
@@ -191,9 +197,6 @@ private fun CharacterList(
     PagingHandler(lazyListState = lazyListState) {
         onLoadNextPage()
     }
-    //    PullToRefreshContainer(
-    //        state = pullRefreshState,
-    //    )
 }
 
 @Composable
