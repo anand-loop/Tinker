@@ -6,48 +6,31 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshState
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.anandj.tinker.R
-import com.anandj.tinker.core.ui.FetchState
-import com.anandj.tinker.core.ui.PagingHandler
+import com.anandj.tinker.core.ui.list.PaginatedList
+import com.anandj.tinker.core.ui.list.PaginatedListState
 import com.anandj.tinker.module.rickmorty.data.remote.Character
 import com.anandj.tinker.theme.TinkerTheme
 
@@ -66,18 +49,16 @@ fun CharactersScreen(
         }
     }
 
-    val pullRefreshState = rememberPullToRefreshState()
     Surface(modifier = modifier) {
         CharacterList(
-            characters = vm.characters,
+            characters = vm.list,
             state = state.value,
-            pullRefreshState = pullRefreshState,
             modifier = Modifier,
             onRefresh = {
-                vm.sendAction(CharactersAction.Load)
+                vm.refresh()
             },
             onLoadNextPage = {
-                vm.sendAction(CharactersAction.LoadNextPage)
+                vm.loadNextPage()
             },
             onCharacterClick = { id ->
                 onRouteToDetails(id)
@@ -95,107 +76,27 @@ private fun handleEffect(
     }
 }
 
-@Composable
-fun RefreshBar(
-    fetchState: FetchState,
-    pullRefreshState: PullToRefreshState,
-    onRefresh: () -> Unit,
-) {
-    LaunchedEffect(key1 = pullRefreshState.isRefreshing) {
-        if (pullRefreshState.isRefreshing) {
-            pullRefreshState.startRefresh()
-            onRefresh()
-        }
-    }
-
-    LaunchedEffect(key1 = fetchState) {
-        if (pullRefreshState.isRefreshing && fetchState != FetchState.REFRESHING) {
-            pullRefreshState.endRefresh()
-        }
-    }
-
-    Box(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-        contentAlignment = Alignment.Center,
-    ) {
-        if (fetchState == FetchState.IDLE) {
-            IconButton(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .height(32.dp * (1f + pullRefreshState.progress)),
-                onClick = { },
-            ) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_people),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
-                )
-            }
-        } else {
-            CircularProgressIndicator(
-                modifier =
-                    Modifier
-                        .size(32.dp),
-            )
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CharacterList(
     modifier: Modifier = Modifier,
     characters: List<Character>,
-    state: CharactersState,
-    pullRefreshState: PullToRefreshState,
+    state: PaginatedListState<Unit>,
     onRefresh: () -> Unit,
     onLoadNextPage: () -> Unit,
     onCharacterClick: (characterId: Int) -> Unit,
 ) {
-    val lazyListState = rememberLazyListState()
-
-    Box(Modifier.nestedScroll(pullRefreshState.nestedScrollConnection)) {
-        LazyColumn(
-            state = lazyListState,
-            modifier = modifier.padding(TinkerTheme.dimen.contentPadding),
-            verticalArrangement = Arrangement.spacedBy(TinkerTheme.dimen.contentPadding),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            item {
-                RefreshBar(state.fetchState, pullRefreshState) {
-                    onRefresh()
-                }
-            }
-
-            itemsIndexed(characters) { index, item ->
-                CharacterCard(
-                    item,
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                onCharacterClick(item.id)
-                            },
-                )
-            }
-
-            item {
-                if (state.fetchState == FetchState.PAGING) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.fillMaxHeight(),
-                        color = MaterialTheme.colorScheme.secondary,
-                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
-                    )
-                }
-            }
-        }
-    }
-    PagingHandler(lazyListState = lazyListState) {
-        onLoadNextPage()
+    PaginatedList(
+        modifier = modifier,
+        items = characters,
+        state = state,
+        onRefresh = onRefresh,
+        onLoadNextPage = onLoadNextPage,
+    ) {
+        CharacterCard(
+            modifier = Modifier.clickable { onCharacterClick(it.id) },
+            character = it,
+        )
     }
 }
 
