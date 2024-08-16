@@ -1,18 +1,23 @@
-package com.anandj.tinker.module.rickmorty.ui
+@file:OptIn(ExperimentalLayoutApi::class)
+
+package com.anandj.tinker.module.rickmorty.ui.character
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -37,6 +42,7 @@ import coil.request.ImageRequest
 import com.anandj.tinker.R
 import com.anandj.tinker.core.draw.GrayscaleTransformation
 import com.anandj.tinker.module.rickmorty.data.remote.Character
+import com.anandj.tinker.theme.TinkerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,7 +78,7 @@ fun CharacterDetailsScreen(
         },
     ) { padding ->
         Box(
-            modifier = modifier,
+            modifier = modifier.padding(padding),
             contentAlignment = Alignment.Center,
         ) {
             if (state.value.isLoading) {
@@ -120,49 +126,53 @@ private fun CharacterDetails(
             contentDescription = null,
         )
 
-        LazyColumn(state = lazyListState) {
-            item {
-                Text(
-                    modifier = Modifier.padding(16.dp),
-                    text = character.species,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Medium,
-                )
-            }
-            item {
-                Text(
-                    modifier = Modifier.padding(16.dp),
-                    text = character.status,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Medium,
-                )
-            }
-            item {
-                Text(
-                    modifier = Modifier.padding(16.dp),
-                    text = character.gender,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Medium,
-                )
-            }
-            item {
-                Text(
-                    modifier = Modifier.padding(16.dp),
-                    text = character.location.name,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Medium,
-                )
-            }
-            item {
-                Text(
-                    modifier = Modifier.padding(16.dp),
-                    text = character.origin.name,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Medium,
-                )
-            }
+        FlowRow(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(TinkerTheme.dimen.contentPadding),
+            horizontalArrangement = Arrangement.spacedBy(TinkerTheme.dimen.contentPadding),
+        ) {
+            Tag(
+                text = character.species,
+            )
+
+            Tag(
+                text = character.status,
+            )
+
+            Tag(
+                text = character.gender,
+            )
+
+            Tag(
+                text = character.location.name,
+            )
+
+            Tag(
+                text = character.origin.name,
+            )
         }
     }
+}
+
+@Composable
+fun Tag(
+    modifier: Modifier = Modifier,
+    text: String,
+) {
+    AssistChip(
+        modifier = modifier,
+        onClick = { },
+        label = {
+            Text(
+                modifier = Modifier,
+                text = text,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Medium,
+            )
+        },
+    )
 }
 
 private fun Character.isDead(): Boolean {

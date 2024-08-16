@@ -30,7 +30,7 @@ abstract class PaginatedListViewModel<FetchResultT, DomainT, ExtraT, ActionT : U
         if (nextPage) {
             updateState { copy(loadingState = LoadingState.Paging) }
         } else {
-            updateState { copy(loadingState = LoadingState.Refreshing) }
+            updateState { copy(loadingState = LoadingState.Refreshing, nextPage = null) }
         }
 
         viewModelScope.launch {

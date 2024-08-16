@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.anandj.tinker.module.rickmorty.ui.RickMortyModule
+import com.anandj.tinker.module.rickmorty.ui.RickMortyNavigation
 import kotlinx.coroutines.launch
 
 @Composable
@@ -42,7 +42,7 @@ fun MainScreen() {
         },
     ) {
         when (state.value.module) {
-            AppModule.RickMorty -> RickMortyModule()
+            AppModule.RickMorty -> RickMortyNavigation()
             else -> {}
         }
     }

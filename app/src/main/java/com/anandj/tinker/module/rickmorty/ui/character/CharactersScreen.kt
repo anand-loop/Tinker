@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.anandj.tinker.module.rickmorty.ui
+package com.anandj.tinker.module.rickmorty.ui.character
 
 import android.content.Context
 import android.widget.Toast

@@ -17,9 +17,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.anandj.tinker.module.rickmorty.ui.character.CharacterDetailsScreen
+import com.anandj.tinker.module.rickmorty.ui.character.CharactersScreen
 
 @Composable
-fun RickMortyModule() {
+fun RickMortyNavigation() {
     val navController = rememberNavController()
 
     Surface {

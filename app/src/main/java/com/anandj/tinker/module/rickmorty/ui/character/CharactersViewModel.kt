@@ -1,4 +1,4 @@
-package com.anandj.tinker.module.rickmorty.ui
+package com.anandj.tinker.module.rickmorty.ui.character
 
 import android.net.Uri
 import com.anandj.tinker.core.ui.UiAction
