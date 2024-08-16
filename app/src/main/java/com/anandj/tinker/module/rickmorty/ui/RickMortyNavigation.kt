@@ -4,14 +4,10 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.anandj.tinker.module.rickmorty.ui.character.CharacterDetailsScreen
 import com.anandj.tinker.module.rickmorty.ui.character.CharactersScreen
+import com.anandj.tinker.module.rickmorty.ui.episode.EpisodesScreen
 
 @Composable
 fun RickMortyNavigation() {
@@ -27,7 +24,7 @@ fun RickMortyNavigation() {
     Surface {
         NavHost(
             navController = navController,
-            startDestination = "characters",
+            startDestination = "episodes",
             exitTransition = { fadeOut(tween(DURATION)) },
             popEnterTransition = { fadeIn(tween(DURATION)) },
             enterTransition = {
@@ -43,6 +40,15 @@ fun RickMortyNavigation() {
                 )
             },
         ) {
+            composable(
+                route = "episodes",
+            ) {
+                EpisodesScreen(
+                    modifier =
+                        Modifier.fillMaxSize(),
+                    onRouteToDetails = { },
+                )
+            }
             composable(
                 route = "characters",
             ) {
@@ -65,15 +71,6 @@ fun RickMortyNavigation() {
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun TestBox(
-    color: Color,
-    onClick: () -> Unit,
-) {
-    Box(modifier = Modifier.fillMaxSize().background(color).clickable { onClick() }) {
     }
 }
 

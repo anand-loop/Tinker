@@ -1,5 +1,7 @@
 package com.anandj.tinker.module.rickmorty.data.remote
 
+import com.squareup.moshi.Json
+
 data class PagedList<T>(
     val info: Info,
     val results: List<T>,
@@ -33,6 +35,17 @@ data class Character(
     val location: Location,
     val image: String,
     val episode: List<String>,
+    val url: String,
+    val created: String,
+)
+
+// @JsonClass(generateAdapter = true)
+data class Episode(
+    val id: Int,
+    val name: String,
+    @Json(name = "air_date") val airDate: String,
+    val episode: String,
+    val characters: List<String>,
     val url: String,
     val created: String,
 )

@@ -14,4 +14,9 @@ interface RickMortyApi {
     suspend fun getCharacter(
         @Path("id") id: Int,
     ): Character
+
+    @GET("episode")
+    suspend fun getEpisodes(
+        @Query("page") page: Int? = null,
+    ): PagedList<Episode>
 }

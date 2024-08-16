@@ -1,9 +1,9 @@
 package com.anandj.tinker.module.rickmorty.data
 
 import com.anandj.tinker.module.rickmorty.data.remote.Character
+import com.anandj.tinker.module.rickmorty.data.remote.Episode
 import com.anandj.tinker.module.rickmorty.data.remote.PagedList
 import com.anandj.tinker.module.rickmorty.data.remote.RickMortyApi
-import kotlinx.coroutines.delay
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,7 +21,13 @@ class RickMortyRepository
             list.results.forEach { character ->
                 characterCache[character.id] = character
             }
-            delay(2000)
+            // delay(2000)
+            return list
+        }
+
+        suspend fun getEpisodes(page: Int? = null): PagedList<Episode> {
+            val list = api.getEpisodes(page)
+
             return list
         }
 
