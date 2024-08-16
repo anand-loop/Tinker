@@ -94,6 +94,6 @@ fun EpisodeCard(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        Text(text = episode.name)
+        Text(text = episode.name + " ${episode.created}")
     }
 }

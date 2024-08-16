@@ -1,6 +1,7 @@
 package com.anandj.tinker.module.rickmorty.data.remote
 
 import com.squareup.moshi.Json
+import java.time.LocalDateTime
 
 data class PagedList<T>(
     val info: Info,
@@ -36,7 +37,7 @@ data class Character(
     val image: String,
     val episode: List<String>,
     val url: String,
-    val created: String,
+    val created: LocalDateTime,
 )
 
 // @JsonClass(generateAdapter = true)
@@ -47,5 +48,5 @@ data class Episode(
     val episode: String,
     val characters: List<String>,
     val url: String,
-    val created: String,
+    val created: LocalDateTime,
 )

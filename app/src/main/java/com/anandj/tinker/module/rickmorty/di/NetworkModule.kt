@@ -1,5 +1,6 @@
 package com.anandj.tinker.module.rickmorty.di
 
+import com.anandj.tinker.core.time.LocalDateTimeAdapter
 import com.anandj.tinker.module.rickmorty.data.remote.RickMortyApi
 import com.squareup.moshi.Moshi
 import dagger.Module
@@ -23,6 +24,8 @@ object NetworkModule {
 
     @Provides
     fun provideMoshi(): Moshi {
-        return Moshi.Builder().build()
+        return Moshi.Builder()
+            .add(LocalDateTimeAdapter())
+            .build()
     }
 }
