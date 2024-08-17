@@ -1,4 +1,4 @@
-package com.anandj.tinker.module.rickmorty.data.remote
+package com.anandj.tinker.module.rickmorty.data.api
 
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -14,6 +14,11 @@ interface RickMortyApi {
     suspend fun getCharacter(
         @Path("id") id: Int,
     ): Character
+
+    @GET("character/{ids}")
+    suspend fun getMultipleCharacters(
+        @Path("ids") ids: List<Int>,
+    ): List<Character>
 
     @GET("episode")
     suspend fun getEpisodes(

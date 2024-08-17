@@ -6,7 +6,7 @@ import com.anandj.tinker.core.ui.UiAction
 import com.anandj.tinker.core.ui.UiEffect
 import com.anandj.tinker.core.ui.UiState
 import com.anandj.tinker.module.rickmorty.data.RickMortyRepository
-import com.anandj.tinker.module.rickmorty.data.remote.Character
+import com.anandj.tinker.module.rickmorty.data.api.Character
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

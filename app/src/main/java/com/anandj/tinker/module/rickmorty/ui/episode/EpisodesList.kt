@@ -14,11 +14,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anandj.tinker.core.ui.list.PaginatedList
 import com.anandj.tinker.core.ui.list.PaginatedListState
-import com.anandj.tinker.module.rickmorty.data.remote.Episode
+import com.anandj.tinker.module.rickmorty.data.api.Episode
+import com.anandj.tinker.theme.TinkerTheme
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun EpisodesScreen(
@@ -78,7 +82,7 @@ private fun EpisodeList(
         onRefresh = onRefresh,
         onLoadNextPage = onLoadNextPage,
     ) {
-        EpisodeCard(
+        EpisodeItem(
             modifier =
                 Modifier
                     .fillMaxWidth()
@@ -89,11 +93,34 @@ private fun EpisodeList(
 }
 
 @Composable
-fun EpisodeCard(
+fun EpisodeItem(
     episode: Episode,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        Text(text = episode.name + " ${episode.created}")
+        Text(text = episode.name)
+        Text(text = episode.airDate)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun EpisodeItemPreview() {
+    val episode =
+        Episode(
+            id = 1,
+            name = "Pilot",
+            airDate = "December 2, 2013",
+            episode = "S01E01",
+            characters =
+                listOf(
+                    "https://rickandmortyapi.com/api/character/1",
+                    "https://rickandmortyapi.com/api/character/2",
+                ),
+            url = "https://rickandmortyapi.com/api/episode/1",
+            created = LocalDateTime.parse("2017-11-10T12:56:33.798Z", DateTimeFormatter.ISO_DATE_TIME),
+        )
+    TinkerTheme {
+        EpisodeItem(episode = episode)
     }
 }

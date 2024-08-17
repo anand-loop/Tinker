@@ -41,7 +41,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.anandj.tinker.R
 import com.anandj.tinker.core.draw.GrayscaleTransformation
-import com.anandj.tinker.module.rickmorty.data.remote.Character
+import com.anandj.tinker.module.rickmorty.data.api.Character
 import com.anandj.tinker.theme.TinkerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

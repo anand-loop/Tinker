@@ -1,7 +1,7 @@
 package com.anandj.tinker.module.rickmorty.di
 
 import com.anandj.tinker.core.time.LocalDateTimeAdapter
-import com.anandj.tinker.module.rickmorty.data.remote.RickMortyApi
+import com.anandj.tinker.module.rickmorty.data.api.RickMortyApi
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides

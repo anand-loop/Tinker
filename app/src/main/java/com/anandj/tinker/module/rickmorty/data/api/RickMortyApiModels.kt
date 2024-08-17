@@ -1,4 +1,4 @@
-package com.anandj.tinker.module.rickmorty.data.remote
+package com.anandj.tinker.module.rickmorty.data.api
 
 import com.squareup.moshi.Json
 import java.time.LocalDateTime
@@ -40,7 +40,6 @@ data class Character(
     val created: LocalDateTime,
 )
 
-// @JsonClass(generateAdapter = true)
 data class Episode(
     val id: Int,
     val name: String,

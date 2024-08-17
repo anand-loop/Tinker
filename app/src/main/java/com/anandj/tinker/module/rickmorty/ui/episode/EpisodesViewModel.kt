@@ -6,8 +6,8 @@ import com.anandj.tinker.core.ui.UiEffect
 import com.anandj.tinker.core.ui.list.PaginatedListState
 import com.anandj.tinker.core.ui.list.PaginatedListViewModel
 import com.anandj.tinker.module.rickmorty.data.RickMortyRepository
-import com.anandj.tinker.module.rickmorty.data.remote.Episode
-import com.anandj.tinker.module.rickmorty.data.remote.PagedList
+import com.anandj.tinker.module.rickmorty.data.api.Episode
+import com.anandj.tinker.module.rickmorty.data.api.PagedList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

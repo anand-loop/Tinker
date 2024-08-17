@@ -1,9 +1,9 @@
 package com.anandj.tinker.module.rickmorty.data
 
-import com.anandj.tinker.module.rickmorty.data.remote.Character
-import com.anandj.tinker.module.rickmorty.data.remote.Episode
-import com.anandj.tinker.module.rickmorty.data.remote.PagedList
-import com.anandj.tinker.module.rickmorty.data.remote.RickMortyApi
+import com.anandj.tinker.module.rickmorty.data.api.Character
+import com.anandj.tinker.module.rickmorty.data.api.Episode
+import com.anandj.tinker.module.rickmorty.data.api.PagedList
+import com.anandj.tinker.module.rickmorty.data.api.RickMortyApi
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,18 +15,49 @@ class RickMortyRepository
     ) {
         private val characterCache = mutableMapOf<Int, Character>()
 
-        suspend fun getCharacters(page: Int? = null): PagedList<Character> {
-            val list = api.getCharacters(page)
-
-            list.results.forEach { character ->
-                characterCache[character.id] = character
+        suspend fun getCharacters(page: Int? = null): Result<PagedList<Character>> {
+            return kotlin.runCatching {
+                api.getCharacters(page).apply {
+                    results.forEach { character ->
+                        characterCache[character.id] = character
+                    }
+                }
             }
-            // delay(2000)
-            return list
+        }
+
+        suspend fun getMultipleCharacters(ids: List<Int>): List<Character> {
+            val cachedCharacters = mutableListOf<Character>()
+            val nonCachedIds = mutableListOf<Int>()
+
+            ids.forEach { id ->
+                val cached = characterCache[id]
+                if (cached != null) {
+                    cachedCharacters.add(cached)
+                } else {
+                    nonCachedIds.add(id)
+                }
+            }
+
+            val newCharacters =
+                api.getMultipleCharacters(nonCachedIds).apply {
+                    forEach { character ->
+                        characterCache[character.id] = character
+                    }
+                }
+
+            return (cachedCharacters + newCharacters).sortedBy { it.id }
         }
 
         suspend fun getEpisodes(page: Int? = null): PagedList<Episode> {
             val list = api.getEpisodes(page)
+
+            list.results.forEach { episode ->
+                val characterIds =
+                    episode.characters
+                        .map { it.substringAfterLast("/").toInt() }
+                val chars = getMultipleCharacters(characterIds)
+                println(chars.toString())
+            }
 
             return list
         }

@@ -6,8 +6,8 @@ import com.anandj.tinker.core.ui.UiEffect
 import com.anandj.tinker.core.ui.list.PaginatedListState
 import com.anandj.tinker.core.ui.list.PaginatedListViewModel
 import com.anandj.tinker.module.rickmorty.data.RickMortyRepository
-import com.anandj.tinker.module.rickmorty.data.remote.Character
-import com.anandj.tinker.module.rickmorty.data.remote.PagedList
+import com.anandj.tinker.module.rickmorty.data.api.Character
+import com.anandj.tinker.module.rickmorty.data.api.PagedList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -23,7 +23,8 @@ class CharactersViewModel
         ) {
         override fun fetch(): Flow<PagedList<Character>> {
             return flow {
-                emit(repository.getCharacters(page = state.value.nextPage?.toInt()))
+                val result = repository.getCharacters(page = state.value.nextPage?.toInt())
+                emit(result.getOrThrow())
             }
         }
 

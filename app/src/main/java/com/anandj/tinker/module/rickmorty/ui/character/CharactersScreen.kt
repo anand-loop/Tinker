@@ -31,7 +31,7 @@ import coil.request.ImageRequest
 import com.anandj.tinker.R
 import com.anandj.tinker.core.ui.list.PaginatedList
 import com.anandj.tinker.core.ui.list.PaginatedListState
-import com.anandj.tinker.module.rickmorty.data.remote.Character
+import com.anandj.tinker.module.rickmorty.data.api.Character
 import com.anandj.tinker.theme.TinkerTheme
 
 @Composable
