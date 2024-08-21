@@ -43,7 +43,8 @@ data class Character(
 data class Episode(
     val id: Int,
     val name: String,
-    @Json(name = "air_date") val airDate: String,
+    @field:Json(name = "air_date")
+    val airDate: String,
     val episode: String,
     val characters: List<String>,
     val url: String,

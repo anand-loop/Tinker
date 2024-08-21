@@ -24,7 +24,7 @@ fun RickMortyNavigation() {
     Surface {
         NavHost(
             navController = navController,
-            startDestination = "episodes",
+            startDestination = "characters",
             exitTransition = { fadeOut(tween(DURATION)) },
             popEnterTransition = { fadeIn(tween(DURATION)) },
             enterTransition = {

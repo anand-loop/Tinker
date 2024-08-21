@@ -10,20 +10,23 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Badge
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
@@ -32,6 +35,7 @@ import com.anandj.tinker.R
 import com.anandj.tinker.core.ui.list.PaginatedList
 import com.anandj.tinker.core.ui.list.PaginatedListState
 import com.anandj.tinker.module.rickmorty.data.api.Character
+import com.anandj.tinker.module.rickmorty.ui.character.render.CharacterRender
 import com.anandj.tinker.theme.TinkerTheme
 
 @Composable
@@ -76,11 +80,10 @@ private fun handleEffect(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CharacterList(
     modifier: Modifier = Modifier,
-    characters: List<Character>,
+    characters: List<CharacterRender>,
     state: PaginatedListState<Unit>,
     onRefresh: () -> Unit,
     onLoadNextPage: () -> Unit,
@@ -94,61 +97,81 @@ private fun CharacterList(
         onLoadNextPage = onLoadNextPage,
     ) {
         CharacterCard(
-            modifier = Modifier.clickable { onCharacterClick(it.id) },
+            modifier =
+                Modifier
+                    .padding(bottom = TinkerTheme.dimen.contentPadding)
+                    .clickable { onCharacterClick(it.id) },
             character = it,
         )
+
+        HorizontalDivider()
     }
 }
 
 @Composable
 fun CharacterCard(
-    character: Character,
+    character: CharacterRender,
     modifier: Modifier = Modifier,
 ) {
-    OutlinedCard(
-        modifier = modifier,
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
+        AsyncImage(
+            model =
+                ImageRequest.Builder(LocalContext.current)
+                    .data(character.image)
+                    .crossfade(400)
+                    .build(),
+            placeholder = painterResource(R.drawable.placeholder_image),
+            contentDescription = null,
+        )
+        Column(
+            modifier =
+                Modifier
+                    .padding(horizontal = TinkerTheme.dimen.contentPadding)
+                    .weight(1.0f),
         ) {
-            AsyncImage(
-                model =
-                    ImageRequest.Builder(LocalContext.current)
-                        .data(character.image)
-                        .crossfade(400)
-                        .build(),
-                placeholder = painterResource(R.drawable.placeholder_image),
-                contentDescription = null,
+            Text(
+                modifier = Modifier.padding(bottom = 4.dp),
+                text = character.name,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Medium,
             )
-            Column(
-                modifier =
-                    Modifier
-                        .padding(TinkerTheme.dimen.contentPadding)
-                        .weight(1.0f),
+
+            val (bg, fg) = character.status.colorPair()
+            Badge(
+                modifier = Modifier.padding(vertical = 4.dp),
+                containerColor = bg,
+                contentColor = fg,
             ) {
                 Text(
-                    text = character.name,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Medium,
-                )
-                Text(
-                    text = character.traitsLabel(),
-                    maxLines = 1,
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Normal,
-                )
-                Text(
-                    text = character.location.name,
-                    maxLines = 1,
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Normal,
+                    modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp),
+                    text = character.status,
+                    style = MaterialTheme.typography.bodyLarge,
                 )
             }
+
+            Text(
+                modifier = Modifier.padding(vertical = 4.dp),
+                text = character.species,
+                maxLines = 1,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Normal,
+            )
         }
+    }
+}
+
+@Composable
+private fun String.colorPair(): Pair<Color, Color> {
+    return when (this) {
+        "Alive" -> Pair(MaterialTheme.colorScheme.tertiaryContainer, MaterialTheme.colorScheme.onTertiaryContainer)
+        "Dead" -> Pair(MaterialTheme.colorScheme.errorContainer, MaterialTheme.colorScheme.onErrorContainer)
+        else -> Pair(MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.onPrimaryContainer)
     }
 }
 

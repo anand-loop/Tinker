@@ -55,8 +55,8 @@ class RickMortyRepository
                 val characterIds =
                     episode.characters
                         .map { it.substringAfterLast("/").toInt() }
-                val chars = getMultipleCharacters(characterIds)
-                println(chars.toString())
+                // val chars = getMultipleCharacters(characterIds)
+                // println(chars.toString())
             }
 
             return list

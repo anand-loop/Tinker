@@ -8,6 +8,8 @@ import com.anandj.tinker.core.ui.list.PaginatedListViewModel
 import com.anandj.tinker.module.rickmorty.data.RickMortyRepository
 import com.anandj.tinker.module.rickmorty.data.api.Character
 import com.anandj.tinker.module.rickmorty.data.api.PagedList
+import com.anandj.tinker.module.rickmorty.ui.character.render.CharacterRender
+import com.anandj.tinker.module.rickmorty.ui.character.render.toRender
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -18,7 +20,7 @@ class CharactersViewModel
     @Inject
     constructor(
         private val repository: RickMortyRepository,
-    ) : PaginatedListViewModel<PagedList<Character>, Character, Unit, CharactersAction, CharactersEffect>(
+    ) : PaginatedListViewModel<PagedList<Character>, CharacterRender, Unit, CharactersAction, CharactersEffect>(
             initialState = PaginatedListState(extra = Unit),
         ) {
         override fun fetch(): Flow<PagedList<Character>> {
@@ -28,9 +30,9 @@ class CharactersViewModel
             }
         }
 
-        override fun onFetchSuccess(data: PagedList<Character>): List<Character> {
+        override fun onFetchSuccess(data: PagedList<Character>): List<CharacterRender> {
             updateState { copy(nextPage = data.info.next.getPageNum()) }
-            return data.results
+            return data.results.map { it.toRender() }
         }
 
         override suspend fun onAction(action: CharactersAction) {
