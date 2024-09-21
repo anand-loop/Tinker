@@ -15,15 +15,14 @@ class RickMortyRepository
     ) {
         private val characterCache = mutableMapOf<Int, Character>()
 
-        suspend fun getCharacters(page: Int? = null): Result<PagedList<Character>> {
-            return kotlin.runCatching {
+        suspend fun getCharacters(page: Int? = null): Result<PagedList<Character>> =
+            kotlin.runCatching {
                 api.getCharacters(page).apply {
                     results.forEach { character ->
                         characterCache[character.id] = character
                     }
                 }
             }
-        }
 
         suspend fun getMultipleCharacters(ids: List<Int>): List<Character> {
             val cachedCharacters = mutableListOf<Character>()

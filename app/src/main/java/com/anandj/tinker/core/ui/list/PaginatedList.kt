@@ -3,7 +3,6 @@
 package com.anandj.tinker.core.ui.list
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,13 +12,11 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.anandj.tinker.theme.TinkerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,7 +33,11 @@ fun <ItemT, ExtraT> PaginatedList(
     val pullRefreshState = rememberPullToRefreshState()
     val isRefreshing = state.loadingState == LoadingState.Refreshing
 
-    Box(Modifier.nestedScroll(pullRefreshState.nestedScrollConnection)) {
+    PullToRefreshBox(
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh,
+        state = pullRefreshState,
+    ) {
         LazyColumn(
             state = lazyListState,
             modifier =
@@ -60,25 +61,6 @@ fun <ItemT, ExtraT> PaginatedList(
                 }
             }
         }
-
-        if (pullRefreshState.isRefreshing) {
-            LaunchedEffect(true) {
-                onRefresh()
-            }
-        }
-
-        LaunchedEffect(isRefreshing) {
-            if (isRefreshing) {
-                pullRefreshState.startRefresh()
-            } else {
-                pullRefreshState.endRefresh()
-            }
-        }
-
-        PullToRefreshContainer(
-            state = pullRefreshState,
-            modifier = Modifier.align(Alignment.TopCenter),
-        )
     }
     PagingHandler(lazyListState = lazyListState) {
         onLoadNextPage()

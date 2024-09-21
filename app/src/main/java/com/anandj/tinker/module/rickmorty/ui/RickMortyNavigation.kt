@@ -24,7 +24,7 @@ fun RickMortyNavigation() {
     Surface {
         NavHost(
             navController = navController,
-            startDestination = "characters",
+            startDestination = Destination.Characters.route,
             exitTransition = { fadeOut(tween(DURATION)) },
             popEnterTransition = { fadeIn(tween(DURATION)) },
             enterTransition = {
@@ -50,7 +50,7 @@ fun RickMortyNavigation() {
                 )
             }
             composable(
-                route = "characters",
+                route = Destination.Characters.route,
             ) {
                 CharactersScreen(
                     modifier =
@@ -59,7 +59,7 @@ fun RickMortyNavigation() {
                 )
             }
             composable(
-                route = "character/{id}",
+                route = Destination.CharacterDetails.route,
                 arguments = listOf(navArgument("id") { type = NavType.IntType }),
             ) { backStackEntry ->
                 val id = backStackEntry.arguments?.getInt("id") ?: 0
@@ -72,6 +72,11 @@ fun RickMortyNavigation() {
             }
         }
     }
+}
+
+sealed class Destination(val route: String) {
+    object Characters : Destination("characters")
+    object CharacterDetails : Destination("character/{id}")
 }
 
 private const val DURATION = 300
