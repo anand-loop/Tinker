@@ -103,6 +103,7 @@ dependencies {
     // Other
     implementation(libs.coil)
     implementation(libs.shimmer)
+    implementation(libs.kotlinx.collectionsImmutable)
 
     // Testing
     testImplementation(libs.junit)
