@@ -4,7 +4,7 @@ targetSdk = "34"
 compileSdk = "34"
 
 agp = "8.3.1"
-kotlin = "1.9.23"
+kotlin = "2.0.0"
 kotlinCompilerExtension = "1.5.11"
 coreKtx = "1.13.1"
 coroutines = "1.8.0"
@@ -74,4 +74,5 @@ kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
