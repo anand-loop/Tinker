@@ -41,8 +41,7 @@ abstract class PaginatedListViewModel<FetchResultT, DomainT, ExtraT, ActionT : U
                     } else {
                         updateState { copy(loadingState = LoadingState.RefreshingError) }
                     }
-                }
-                .collect { result ->
+                }.collect { result ->
                     updateState { copy(loadingState = LoadingState.Idle) }
                     val items = onFetchSuccess(result)
 
