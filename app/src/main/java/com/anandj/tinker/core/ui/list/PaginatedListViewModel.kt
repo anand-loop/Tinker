@@ -60,11 +60,10 @@ abstract class PaginatedListViewModel<FetchResultT, DomainT, ExtraT, ActionT : U
     protected abstract fun onFetchSuccess(data: FetchResultT): List<DomainT>
 }
 
-data class PaginatedListState<ExtraT>(
+data class PaginatedListState<ParamsT>(
     val loadingState: LoadingState = LoadingState.Idle,
-    val fetchParams: FetchParams = emptyMap(),
+    val params: ParamsT,
     val nextPage: String? = null,
-    val extra: ExtraT,
 ) : UiState
 
 enum class LoadingState {
@@ -74,5 +73,3 @@ enum class LoadingState {
     RefreshingError,
     PagingError,
 }
-
-typealias FetchParams = Map<String, Any?>

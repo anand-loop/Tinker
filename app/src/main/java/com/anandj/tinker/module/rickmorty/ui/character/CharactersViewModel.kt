@@ -21,7 +21,7 @@ class CharactersViewModel
     constructor(
         private val repository: RickMortyRepository,
     ) : PaginatedListViewModel<PagedList<Character>, CharacterRender, Unit, CharactersAction, CharactersEffect>(
-            initialState = PaginatedListState(extra = Unit),
+            initialState = PaginatedListState(params = Unit),
         ) {
         override fun fetch(): Flow<PagedList<Character>> {
             return flow {

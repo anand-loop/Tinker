@@ -19,7 +19,7 @@ class EpisodesViewModel
     constructor(
         private val repository: RickMortyRepository,
     ) : PaginatedListViewModel<PagedList<Episode>, Episode, Unit, EpisodesAction, EpisodesEffect>(
-            initialState = PaginatedListState(extra = Unit),
+            initialState = PaginatedListState(params = Unit),
         ) {
         override fun fetch(): Flow<PagedList<Episode>> {
             return flow {
