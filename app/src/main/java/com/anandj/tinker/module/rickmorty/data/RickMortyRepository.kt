@@ -6,6 +6,7 @@ import com.anandj.tinker.module.rickmorty.data.api.PagedList
 import com.anandj.tinker.module.rickmorty.data.api.RickMortyApi
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.delay
 
 @Singleton
 class RickMortyRepository
@@ -17,6 +18,7 @@ class RickMortyRepository
 
         suspend fun getCharacters(page: Int? = null): Result<PagedList<Character>> =
             kotlin.runCatching {
+                delay(3000)
                 api.getCharacters(page).apply {
                     results.forEach { character ->
                         characterCache[character.id] = character
